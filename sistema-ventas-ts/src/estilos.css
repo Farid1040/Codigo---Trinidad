@@ -1,0 +1,39 @@
+/* Reemplaza al `web/css/estilos.css` que referenciaba Principal.jsp. */
+
+body {
+  background-color: #f7f7f9;
+}
+
+.navbar.bg-info .nav-link,
+.navbar.bg-info .nav-item.active > .nav-link {
+  color: #212529;
+}
+
+.navbar.bg-info .btn-outline-light {
+  color: #212529;
+  border-color: rgba(0, 0, 0, 0.35);
+}
+
+.navbar.bg-info .btn-outline-light:hover,
+.navbar.bg-info .btn-outline-light:focus {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #212529;
+}
+
+.dropdown-menu {
+  min-width: 220px;
+}
+
+.table {
+  background-color: #fff;
+}
+
+#show_password {
+  min-width: 42px;
+}
+
+@media (max-width: 768px) {
+  .navbar .nav-item {
+    margin-bottom: 4px;
+  }
+}
