@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import type { Request, Response, NextFunction } from 'express'
+import { consultar, ejecutar } from '../config/conexion.js'
 import { EmpleadoDAO } from '../modelo/EmpleadoDAO.js'
 import type { SesionUsuario } from '../modelo/tipos.js'
 
@@ -7,45 +8,33 @@ import type { SesionUsuario } from '../modelo/tipos.js'
  * Puerto de `Controlador/Validar.java`.
  *
  * El servlet guardaba al empleado en el `HttpSession`; aquí la sesión es un
- * token opaco guardado en memoria con una caducidad de 30 minutos (el
+ * token opaco persistido en MySQL/TiDB con una caducidad de 30 minutos (el
  * session-timeout del web.xml original).
  */
 const CADUCIDAD_MS = 30 * 60 * 1000
 
-interface Sesion {
-  usuario: SesionUsuario
-  expira: number
-}
-
-const sesiones = new Map<string, Sesion>()
 const empleadoDAO = new EmpleadoDAO()
 
-function crearSesion(usuario: SesionUsuario): string {
+async function crearSesion(usuario: SesionUsuario): Promise<string> {
   const token = randomUUID()
-  sesiones.set(token, { usuario, expira: Date.now() + CADUCIDAD_MS })
+  const expira = new Date(Date.now() + CADUCIDAD_MS)
+  await ejecutar('DELETE FROM sesiones WHERE Expira <= CURRENT_TIMESTAMP')
+  await ejecutar('INSERT INTO sesiones (Token, IdEmpleado, Expira) VALUES (?, ?, ?)', [token, usuario.idEmpleado, expira])
   return token
 }
 
-function leerSesion(token: string | undefined): SesionUsuario | null {
+async function leerSesion(token: string | undefined): Promise<SesionUsuario | null> {
   if (!token) return null
-  const sesion = sesiones.get(token)
-  if (!sesion) return null
-  if (sesion.expira <= Date.now()) {
-    sesiones.delete(token)
-    return null
-  }
-  return sesion.usuario
+  return consultar<SesionUsuario>(
+    'SELECT e.IdEmpleado AS idEmpleado, e.User AS user, e.Dni AS dni, e.Nombres AS nom, e.Telefono AS tel ' +
+      'FROM sesiones s JOIN empleado e ON e.IdEmpleado = s.IdEmpleado ' +
+      'WHERE s.Token = ? AND s.Expira > CURRENT_TIMESTAMP',
+    [token],
+  )
 }
 
-function cerrarSesion(token: string | undefined): void {
-  if (token) sesiones.delete(token)
-}
-
-function limpiarSesionesVencidas(): void {
-  const ahora = Date.now()
-  for (const [token, sesion] of sesiones) {
-    if (sesion.expira <= ahora) sesiones.delete(token)
-  }
+async function cerrarSesion(token: string | undefined): Promise<void> {
+  if (token) await ejecutar('DELETE FROM sesiones WHERE Token = ?', [token])
 }
 
 function extraerToken(req: Request): string | undefined {
@@ -63,14 +52,18 @@ declare global {
   }
 }
 
-export function autenticar(req: Request, res: Response, next: NextFunction): void {
-  const usuario = leerSesion(extraerToken(req))
-  if (!usuario) {
-    res.status(401).json({ ok: false, error: 'Sesión no iniciada o expirada. Vuelve a ingresar.' })
-    return
+export async function autenticar(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const usuario = await leerSesion(extraerToken(req))
+    if (!usuario) {
+      res.status(401).json({ ok: false, error: 'Sesión no iniciada o expirada. Vuelve a ingresar.' })
+      return
+    }
+    req.usuario = usuario
+    next()
+  } catch (error) {
+    next(error)
   }
-  req.usuario = usuario
-  next()
 }
 
 export function registrarRutasAuth(router: import('express').Router): void {
@@ -98,8 +91,7 @@ export function registrarRutasAuth(router: import('express').Router): void {
         nom: empleado.nom,
         tel: empleado.tel,
       }
-      const token = crearSesion(usuario)
-      limpiarSesionesVencidas()
+      const token = await crearSesion(usuario)
 
       res.json({ ok: true, token, usuario })
     } catch (error) {
@@ -107,9 +99,13 @@ export function registrarRutasAuth(router: import('express').Router): void {
     }
   })
 
-  router.post('/auth/logout', (req, res) => {
-    cerrarSesion(extraerToken(req))
-    res.json({ ok: true })
+  router.post('/auth/logout', async (req, res, next) => {
+    try {
+      await cerrarSesion(extraerToken(req))
+      res.json({ ok: true })
+    } catch (error) {
+      next(error)
+    }
   })
 
   router.get('/auth/session', autenticar, (req, res) => {

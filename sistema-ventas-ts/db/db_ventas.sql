@@ -17,6 +17,7 @@ CREATE DATABASE IF NOT EXISTS `db_ventas`
 USE `db_ventas`;
 
 SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `sesiones`;
 DROP TABLE IF EXISTS `detalle_ventas`;
 DROP TABLE IF EXISTS `ventas`;
 DROP TABLE IF EXISTS `producto`;
@@ -40,6 +41,15 @@ CREATE TABLE `empleado` (
   `Password`   VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`IdEmpleado`),
   UNIQUE KEY `uq_empleado_user` (`User`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+CREATE TABLE `sesiones` (
+  `Token`      CHAR(36)      NOT NULL,
+  `IdEmpleado` INT UNSIGNED NOT NULL,
+  `Expira`     DATETIME      NOT NULL,
+  PRIMARY KEY (`Token`),
+  KEY `idx_sesiones_expira` (`Expira`),
+  KEY `idx_sesiones_empleado` (`IdEmpleado`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE `cliente` (

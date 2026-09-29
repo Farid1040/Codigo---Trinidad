@@ -176,4 +176,11 @@ implementar.
 | `GET` | `/api/ventas/:id` | Venta con su detalle |
 
 Todas las rutas salvo `auth/login` y `salud` exigen `Authorization: Bearer <token>`
-(sesión de 30 minutos, el mismo `session-timeout` del `web.xml` original).
+(sesión de 30 minutos, persistida en MySQL/TiDB para funcionar también en serverless).
+
+## 7. Despliegue en Vercel
+
+Importa `Farid1040/Codigo---Trinidad` y establece `sistema-ventas-ts` como **Root Directory**.
+El archivo `vercel.json` configura el build de Vite y la función Express para las rutas `/api/*`.
+Define en el proyecto de Vercel las variables `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`
+y `DB_NAME` usando las credenciales de TiDB Cloud. No subas `.env` al repositorio.
