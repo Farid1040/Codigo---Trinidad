@@ -1,0 +1,13 @@
+{
+  "name": "mi-empresa-store-pwa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tienda PWA con JavaScript, Vercel Functions y TiDB Cloud.",
+  "scripts": {
+    "dev": "npx vercel dev",
+    "check": "node scripts/check.js"
+  },
+  "dependencies": {
+    "mysql2": "^3.14.1"
+  }
+}

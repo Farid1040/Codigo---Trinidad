@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f6f5f1">
+    <meta name="description" content="Compra tecnología y accesorios en Mi Empresa Store.">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Mi Empresa Store — compras simples</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="/icons/icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="/icons/icon-180.png">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Mi Empresa Store, inicio">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <span>mi empresa<span class="brand-light"> store</span></span>
+      </a>
+      <nav class="header-actions" aria-label="Acciones de la tienda">
+        <a class="nav-link" href="#catalogo">Tienda</a>
+        <button class="cart-trigger" id="open-cart" type="button" aria-haspopup="dialog" aria-controls="cart-dialog">
+          <span class="cart-icon" aria-hidden="true">＋</span>
+          <span>Mi carrito</span>
+          <span class="cart-count" id="cart-count" aria-live="polite">0</span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> COMPRA LOCAL, COMPRA MEJOR</p>
+          <h1 id="hero-title">Lo que buscas,<br><span>más cerca.</span></h1>
+          <p class="hero-description">Encuentra tus favoritos de tecnología y accesorios. Agrégalos al carrito y arma tu pedido en minutos.</p>
+          <a class="hero-link" href="#catalogo">Explorar productos <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-orbit orbit-one"></div>
+          <div class="art-orbit orbit-two"></div>
+          <div class="art-sun"></div>
+          <div class="art-card">
+            <span class="art-card-kicker">UNA BUENA ELECCIÓN</span>
+            <span class="art-card-emoji">🎧</span>
+            <span class="art-card-caption">Todo para<br>tu día a día.</span>
+          </div>
+          <span class="art-spark spark-one">✳</span>
+          <span class="art-spark spark-two">✳</span>
+        </div>
+        <div class="hero-stamp" aria-hidden="true"><span>HECHO<br>PARA TI</span><b>✳</b></div>
+      </section>
+
+      <section class="catalog-section" id="catalogo" aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">NUESTRA SELECCIÓN</p>
+            <h2 id="catalog-title">Productos destacados<span class="heading-period">.</span></h2>
+          </div>
+          <p class="catalog-note">Encuentra algo que te encante.</p>
+        </div>
+
+        <div class="catalog-controls">
+          <div class="filter-group" role="group" aria-label="Filtrar productos">
+            <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">Todos</button>
+            <button class="filter-button" type="button" data-filter="available" aria-pressed="false">Disponibles</button>
+          </div>
+          <label class="search-box">
+            <span class="visually-hidden">Buscar producto</span>
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="product-search" type="search" placeholder="¿Qué estás buscando?" autocomplete="off">
+            <kbd>/</kbd>
+          </label>
+        </div>
+
+        <p class="notice" id="catalog-notice" role="status" hidden></p>
+        <div class="product-grid" id="product-grid" aria-live="polite" aria-busy="true">
+          <div class="loading-card" aria-hidden="true"></div>
+          <div class="loading-card" aria-hidden="true"></div>
+          <div class="loading-card" aria-hidden="true"></div>
+        </div>
+        <p class="empty-state" id="empty-state" hidden>No encontramos productos. Prueba otra búsqueda.</p>
+      </section>
+
+      <section class="trust-strip" aria-label="Información de la tienda">
+        <div><span class="trust-icon" aria-hidden="true">✦</span><span>Una selección pensada para ti</span></div>
+        <div><span class="trust-icon" aria-hidden="true">▣</span><span>Tu carrito se guarda en este dispositivo</span></div>
+        <div><span class="trust-icon" aria-hidden="true">↗</span><span>Instala la tienda en tu celular</span></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand footer-brand" href="/">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <span>mi empresa<span class="brand-light"> store</span></span>
+      </a>
+      <p>Una tienda sencilla, a un toque de distancia.</p>
+      <span class="version-label">Versión <span id="app-version">1.0.0</span></span>
+    </footer>
+
+    <dialog class="cart-dialog" id="cart-dialog" aria-labelledby="cart-title">
+      <div class="cart-panel">
+        <div class="cart-heading">
+          <div>
+            <p class="eyebrow">TU SELECCIÓN</p>
+            <h2 id="cart-title">Mi carrito<span class="heading-period">.</span></h2>
+          </div>
+          <button class="icon-button" id="close-cart" type="button" aria-label="Cerrar carrito">×</button>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <p class="cart-empty" id="cart-empty">Tu carrito está esperando algo bueno.</p>
+        <div class="cart-summary">
+          <span>Subtotal</span>
+          <strong id="cart-subtotal">S/ 0.00</strong>
+        </div>
+        <form class="checkout-form" id="checkout-form">
+          <p class="form-heading">¿A quién preparamos el pedido?</p>
+          <label>Nombre completo<input name="nombres" required maxlength="120" autocomplete="name" placeholder="Tu nombre"></label>
+          <label>Correo electrónico<input name="email" type="email" required maxlength="254" autocomplete="email" placeholder="nombre@correo.com"></label>
+          <label>Dirección de entrega<input name="direccion" required maxlength="255" autocomplete="street-address" placeholder="Calle, número y distrito"></label>
+          <label>DNI <span class="optional-label">(opcional)</span><input name="dni" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" autocomplete="off" placeholder="8 dígitos"></label>
+          <button class="checkout-button" id="checkout-button" type="submit" disabled>Registrar pedido <span aria-hidden="true">→</span></button>
+          <p class="checkout-note">El pedido queda pendiente de pago. Esta tienda no procesa cobros.</p>
+        </form>
+        <p class="cart-message" id="cart-message" role="status" aria-live="polite"></p>
+      </div>
+    </dialog>
+
+    <div class="update-notice" id="update-notice" role="status" hidden>
+      <span>Hay una nueva versión de la tienda.</span>
+      <button id="update-button" type="button">Actualizar</button>
+    </div>
+  </body>
+</html>
