@@ -1,4 +1,4 @@
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.1.0';
 const CART_STORAGE_KEY = 'mi-empresa-store-cart-v1';
 const PRODUCTS_STORAGE_KEY = 'mi-empresa-store-products-v1';
 const money = new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' });
@@ -16,6 +16,9 @@ const elements = {
   cartMessage: document.querySelector('#cart-message'),
   checkoutForm: document.querySelector('#checkout-form'),
   checkoutButton: document.querySelector('#checkout-button'),
+  installButton: document.querySelector('#install-app'),
+  installDialog: document.querySelector('#install-dialog'),
+  installInstructions: document.querySelector('#install-instructions'),
   updateNotice: document.querySelector('#update-notice'),
   updateButton: document.querySelector('#update-button')
 };
@@ -24,6 +27,53 @@ let products = [];
 let cart = readCart();
 let activeFilter = 'all';
 let serviceWorkerRegistration;
+let deferredInstallPrompt;
+
+function isAppInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+
+function updateInstallButton() {
+  const installed = isAppInstalled();
+  elements.installButton.disabled = installed;
+  elements.installButton.classList.toggle('is-installed', installed);
+  elements.installButton.querySelector('.install-label').textContent = installed ? 'App instalada' : 'Instalar app';
+  elements.installButton.setAttribute('aria-label', installed ? 'Mi Empresa Store ya está instalada' : 'Instalar Mi Empresa Store');
+  elements.installButton.title = installed ? 'Mi Empresa Store ya está instalada' : 'Instalar Mi Empresa Store';
+}
+
+function showInstallInstructions() {
+  const userAgent = navigator.userAgent;
+  const isAppleMobile = /iPad|iPhone|iPod/.test(userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  elements.installInstructions.textContent = isAppleMobile
+    ? 'En Safari, toca Compartir y elige «Añadir a pantalla de inicio». Luego toca «Añadir» para instalar la tienda.'
+    : 'Abre el menú de tu navegador y elige «Instalar aplicación» o «Añadir a pantalla de inicio». En Chrome para computadora, también puedes usar el icono de instalación junto a la dirección del sitio.';
+  elements.installDialog.showModal();
+}
+
+async function installApp() {
+  if (isAppInstalled()) {
+    updateInstallButton();
+    return;
+  }
+
+  if (!deferredInstallPrompt) {
+    showInstallInstructions();
+    return;
+  }
+
+  const installPrompt = deferredInstallPrompt;
+  deferredInstallPrompt = undefined;
+  try {
+    await installPrompt.prompt();
+    await installPrompt.userChoice;
+  } catch (error) {
+    console.error('No se pudo abrir la opción de instalación del navegador.', error);
+    showInstallInstructions();
+  }
+}
 
 function readStoredJson(key, fallback) {
   try {
@@ -346,6 +396,17 @@ function setupServiceWorker() {
   });
 }
 
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  updateInstallButton();
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = undefined;
+  updateInstallButton();
+});
+
 function showUpdateNotice() {
   elements.updateNotice.hidden = false;
 }
@@ -364,6 +425,12 @@ document.querySelectorAll('[data-filter]').forEach((button) => {
 });
 document.querySelector('#open-cart').addEventListener('click', () => elements.cartDialog.showModal());
 document.querySelector('#close-cart').addEventListener('click', () => elements.cartDialog.close());
+elements.installButton.addEventListener('click', installApp);
+document.querySelector('#close-install').addEventListener('click', () => elements.installDialog.close());
+document.querySelector('#install-understood').addEventListener('click', () => elements.installDialog.close());
+elements.installDialog.addEventListener('click', (event) => {
+  if (event.target === elements.installDialog) elements.installDialog.close();
+});
 elements.cartDialog.addEventListener('click', (event) => {
   if (event.target === elements.cartDialog) elements.cartDialog.close();
 });
@@ -373,6 +440,7 @@ elements.updateButton.addEventListener('click', () => {
   serviceWorkerRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
 });
 document.querySelector('#app-version').textContent = APP_VERSION;
+updateInstallButton();
 
 renderCart();
 loadProducts();

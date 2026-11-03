@@ -55,7 +55,7 @@ Este comando descarga Vercel CLI bajo demanda si no está instalado. Abre la URL
 
 ## Instalar y recibir actualizaciones
 
-Abre el dominio HTTPS de Vercel desde Chrome en Android y elige **Instalar aplicación** o **Añadir a pantalla de inicio**. En iPhone, abre el sitio en Safari y elige **Compartir → Añadir a pantalla de inicio**.
+Abre el dominio HTTPS de Vercel desde el celular y toca **Instalar app** en la barra superior. En Android y navegadores compatibles, se abre el diálogo nativo de instalación. En iPhone, Safari no ofrece esa API: el botón muestra los pasos **Compartir → Añadir a pantalla de inicio**. También puedes instalar desde el menú del navegador.
 
 El service worker guarda los archivos de la interfaz para abrirla sin conexión y consulta una nueva versión al iniciar y al volver a la aplicación. Cuando Vercel publica una actualización, aparece el aviso **Hay una nueva versión de la tienda** y el botón **Actualizar**. Para cada versión publicada, cambia `APP_VERSION` en `app.js` y aumenta `CACHE_NAME` en `sw.js`; así el dispositivo renueva el caché del sitio. Los pedidos y el catálogo actual requieren conexión.
 
