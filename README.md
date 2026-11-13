@@ -19,3 +19,9 @@ Después ejecute el archivo generado correspondiente a su sistema operativo.
 ## Nota
 
 Los mensajes y comentarios del código se mantienen sin caracteres acentuados para facilitar la compatibilidad con las configuraciones antiguas de Turbo Pascal.
+
+## Limpia Parlante para Android
+
+La app Flutter y su pagina de descarga estan en [limpiador-parlante](./limpiador-parlante/).
+La carpeta incluye el codigo fuente, el APK de Android y los archivos para
+desplegar la pagina estatica en Vercel.

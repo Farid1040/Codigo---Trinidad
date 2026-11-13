@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#086f68">
+    <meta
+      name="description"
+      content="Descarga Limpia Parlante para Android y escanea el QR desde tu teléfono."
+    >
+    <title>Limpia Parlante para Android</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: #f3f7f6;
+        color: #173735;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      main {
+        width: min(100%, 560px);
+        padding: clamp(24px, 6vw, 42px);
+        border: 1px solid #e0eae7;
+        border-radius: 28px;
+        background: #fff;
+        box-shadow: 0 18px 60px #123b3212;
+        text-align: center;
+      }
+
+      .icon {
+        display: grid;
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 18px;
+        place-items: center;
+        border-radius: 20px;
+        background: #ddf2ec;
+        color: #087f73;
+        font-size: 32px;
+      }
+
+      .eyebrow {
+        color: #087f73;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+      }
+
+      h1 { margin: 8px 0 12px; font-size: clamp(28px, 7vw, 38px); }
+      p { color: #657674; line-height: 1.6; }
+
+      .download {
+        display: inline-flex;
+        min-height: 52px;
+        align-items: center;
+        justify-content: center;
+        margin: 16px 0 10px;
+        padding: 0 24px;
+        border-radius: 15px;
+        background: #087f73;
+        color: #fff;
+        font-weight: 750;
+        text-decoration: none;
+      }
+
+      .qr {
+        width: 220px;
+        height: 220px;
+        margin: 12px auto;
+        image-rendering: pixelated;
+      }
+
+      .note {
+        margin-top: 20px;
+        padding: 14px;
+        border-radius: 14px;
+        background: #fff6e8;
+        color: #70572d;
+        font-size: 13px;
+        text-align: left;
+      }
+
+      small { color: #71817f; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="icon" aria-hidden="true">♫</div>
+      <div class="eyebrow">APLICACIÓN PARA ANDROID</div>
+      <h1>Limpia Parlante</h1>
+      <p>
+        Escanea el código QR con tu teléfono Android o descarga el instalador
+        directamente desde esta página.
+      </p>
+      <img class="qr" src="qr.png" alt="Código QR para descargar Limpia Parlante">
+      <br>
+      <a class="download" href="app-release.apk" download>
+        Descargar aplicación (APK)
+      </a>
+      <br>
+      <small>Android puede pedirte confirmar la descarga e instalación.</small>
+      <div class="note">
+        El código QR no instala aplicaciones sin tu permiso. Tras descargar el
+        APK, Android te pedirá que confirmes la instalación. Usa un volumen
+        cómodo: los tonos no garantizan retirar agua o suciedad del teléfono.
+      </div>
+    </main>
+  </body>
+</html>
