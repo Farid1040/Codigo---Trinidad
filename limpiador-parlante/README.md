@@ -41,3 +41,8 @@ como un proyecto estatico de Vercel, sin comando de compilacion.
 
 El QR de descarga se genera con la URL publica asignada al proyecto y se
 guarda como `qr.png` junto a la pagina.
+
+Pagina publicada: https://limpia-parlante-trinidad.vercel.app/
+
+El QR de `qr.png` abre directamente el APK:
+https://limpia-parlante-trinidad.vercel.app/app-release.apk

@@ -25,3 +25,5 @@ Los mensajes y comentarios del código se mantienen sin caracteres acentuados pa
 La app Flutter y su pagina de descarga estan en [limpiador-parlante](./limpiador-parlante/).
 La carpeta incluye el codigo fuente, el APK de Android y los archivos para
 desplegar la pagina estatica en Vercel.
+
+Pagina de descarga: https://limpia-parlante-trinidad.vercel.app/
